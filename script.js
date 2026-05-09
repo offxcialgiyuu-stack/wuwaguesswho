@@ -1,39 +1,39 @@
 const characters = [
-    "Aemeath", "Augusta", "Baizhi", "Brant", "Buling", "Calcharo", "Camellya", 
-    "Cantarella", "Carlotta", "Cartethyia", "Changli", "Chisa", "Danjin", "Encore", 
-    "Geshu Lin", "Jianxin", "Jinhsi", "Jiyan", "Lingyang", "Lupa", "Luuk", "Lumi", 
-    "Malerover", "Mortefi", "Phrolova", "Rover", "Sanhua", "Shorekeeper", "Sigrika", 
-    "Taoqi", "Verina", "Xiangliyao", "Yangyang", "Yinlin", "Youhu", "Yuanwu", 
-    "Zani", "Zhezhi"
+    'Aemeath', 'Augusta', 'Baizhi', 'Brant', 'Buling', 'Calcharo', 'Camellya', 'Cantarella', 
+    'Carlotta', 'Cartethyia', 'Changli', 'Chisa', 'Chixia', 'Ciaccona', 'Danjin', 'Denia', 
+    'Encore', 'Femalerover', 'Fleurdelys', 'Galbrena', 'Hiyuki', 'Iuno', 'Jianxin', 'Jinhsi', 
+    'Jiyan', 'Lingyang', 'Lumi', 'Lupa', 'Luuk', 'Lynae', 'Malerover', 'Mornye', 'Mortefi', 
+    'Phoebe', 'Phrolova', 'Qiuyuan', 'Roccia', 'Sanhua', 'Shorekeeper', 'Sigrika', 'Taoqi', 
+    'Verina', 'Xiangliyao', 'Yangyang', 'Yinlin', 'Youhu', 'Yuanwu', 'Zani', 'Zhezhi'
 ];
 
 const board = document.getElementById('board');
-const countDisplay = document.getElementById('count');
 const secretSlot = document.getElementById('secret-slot');
+const counterDisplay = document.getElementById('counter');
+const modal = document.getElementById('custom-modal');
+
+const totalCount = characters.length;
 
 function updateCounter() {
-    const active = document.querySelectorAll('.character-card:not(.is-eliminated)').length;
-    countDisplay.textContent = active;
+    const eliminatedCount = document.querySelectorAll('.is-eliminated').length;
+    counterDisplay.innerText = totalCount - eliminatedCount;
 }
 
-function showSecret() {
-    secretSlot.style.transform = "scale(1.2)";
-    setTimeout(() => secretSlot.style.transform = "scale(1)", 200);
-}
+function hideSecret() { secretSlot.classList.add('hidden-char'); }
+function showSecret() { secretSlot.classList.remove('hidden-char'); }
 
-function hideSecret() {
-    secretSlot.style.opacity = "0.3";
-}
+secretSlot.onclick = () => {
+    if (!secretSlot.classList.contains('empty-slot')) {
+        if (secretSlot.classList.contains('hidden-char')) showSecret();
+        else hideSecret();
+    }
+};
 
-secretSlot.onmouseenter = () => secretSlot.style.opacity = "1";
-secretSlot.onmouseleave = () => secretSlot.style.opacity = "0.3";
-
-// Karten erstellen
 characters.forEach(name => {
     const card = document.createElement('div');
     card.className = 'character-card';
     
-    // PFAD-CHECK: images/Wuwa/ (Großes W!)
+    // Convert name to lowercase for the file path (e.g., Augusta -> augusta.jpg)
     const imagePath = `images/Wuwa/${name.toLowerCase()}.jpg`;
     
     card.onclick = () => {
@@ -47,7 +47,7 @@ characters.forEach(name => {
         showSecret();
         secretSlot.innerHTML = `
             <img src="${imagePath}">
-            <div style="position:absolute; bottom:0; width:100%; background:rgba(0,0,0,0.8); font-size:12px; padding:4px; font-weight: bold; text-align:center;">${name}</div>
+            <div style="position:absolute; bottom:0; width:100%; background:rgba(0,0,0,0.8); font-size:12px; padding:4px; font-weight: bold;">${name}</div>
         `;
         setTimeout(hideSecret, 1500);
     };
@@ -56,23 +56,23 @@ characters.forEach(name => {
     board.appendChild(card);
 });
 
-// Modal Logik
-const modal = document.getElementById("instructions-modal");
-const btn = document.getElementById("info-btn");
-const span = document.getElementsByClassName("close-btn")[0];
+// MODAL LOGIC
+const resetBtn = document.getElementById('reset-btn');
+const confirmBtn = document.getElementById('confirm-reset');
+const cancelBtn = document.getElementById('cancel-reset');
 
-btn.onclick = function() {
-    modal.style.display = "block";
-}
+resetBtn.onclick = () => modal.style.display = 'flex';
+cancelBtn.onclick = () => modal.style.display = 'none';
 
-span.onclick = function() {
-    modal.style.display = "none";
-}
+confirmBtn.onclick = () => {
+    document.querySelectorAll('.character-card').forEach(card => card.classList.remove('is-eliminated'));
+    secretSlot.innerHTML = '';
+    secretSlot.classList.add('empty-slot');
+    hideSecret();
+    updateCounter();
+    modal.style.display = 'none';
+};
 
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-
-updateCounter();
+window.onclick = (event) => {
+    if (event.target == modal) modal.style.display = 'none';
+};
