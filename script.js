@@ -11,7 +11,9 @@ const board = document.getElementById('board');
 const secretSlot = document.getElementById('secret-slot');
 const counterDisplay = document.getElementById('counter');
 const modal = document.getElementById('custom-modal');
+const modeIndicator = document.getElementById('mode-indicator');
 
+let currentFolder = 'images'; // Standard-Ordner
 const totalCount = characters.length;
 
 function updateCounter() {
@@ -29,32 +31,63 @@ secretSlot.onclick = () => {
     }
 };
 
-characters.forEach(name => {
-    const card = document.createElement('div');
-    card.className = 'character-card';
-    
-    // Convert name to lowercase for the file path (e.g., Augusta -> augusta.jpg)
-    const imagePath = `images/Wuwa/${name.toLowerCase()}.webp`;
-    
-    card.onclick = () => {
-        card.classList.toggle('is-eliminated');
-        updateCounter();
-    };
-    
-    card.oncontextmenu = (e) => {
-        e.preventDefault();
-        secretSlot.classList.remove('empty-slot');
-        showSecret();
-        secretSlot.innerHTML = `
-            <img src="${imagePath}">
-            <div style="position:absolute; bottom:0; width:100%; background:rgba(0,0,0,0.8); font-size:12px; padding:4px; font-weight: bold;">${name}</div>
-        `;
-        setTimeout(hideSecret, 1500);
-    };
+// Funktion um das Spielfeld zu zeichnen
+function renderBoard() {
+    board.innerHTML = ''; // Altes Board löschen
+    characters.forEach(name => {
+        const card = document.createElement('div');
+        card.className = 'character-card';
+        
+        // Nutzt den aktuellen Ordner (images oder images2)
+        const imagePath = `${currentFolder}/Wuwa/${name.toLowerCase()}.jpg`;
+        
+        card.onclick = () => {
+            card.classList.toggle('is-eliminated');
+            updateCounter();
+        };
+        
+        card.oncontextmenu = (e) => {
+            e.preventDefault();
+            secretSlot.classList.remove('empty-slot');
+            showSecret();
+            secretSlot.innerHTML = `
+                <img src="${imagePath}">
+                <div style="position:absolute; bottom:0; width:100%; background:rgba(0,0,0,0.8); font-size:12px; padding:4px; font-weight: bold;">${name}</div>
+            `;
+            setTimeout(hideSecret, 1500);
+        };
 
-    card.innerHTML = `<img src="${imagePath}" alt="${name}"><div class="name-tag">${name}</div>`;
-    board.appendChild(card);
+        card.innerHTML = `<img src="${imagePath}" alt="${name}"><div class="name-tag">${name}</div>`;
+        board.appendChild(card);
+    });
+    updateCounter();
+}
+
+// TASTEN-KOMBINATION: Strg + I
+window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'i') {
+        e.preventDefault(); // Verhindert Browser-Standard-Aktionen
+        
+        // Wechsel zwischen images und images2
+        currentFolder = (currentFolder === 'images') ? 'images2' : 'images';
+        
+        // UI Update
+        modeIndicator.innerText = `Mode: ${currentFolder === 'images' ? 'Default' : 'Alternative'} (${currentFolder})`;
+        
+        // Spielfeld mit neuen Pfaden neu laden
+        renderBoard();
+        
+        // Secret Slot leeren beim Wechsel, da das Bild sonst alt bleibt
+        secretSlot.innerHTML = '';
+        secretSlot.classList.add('empty-slot');
+        hideSecret();
+        
+        console.log("Ordner gewechselt zu: " + currentFolder);
+    }
 });
+
+// Initiales Laden
+renderBoard();
 
 // MODAL LOGIC
 const resetBtn = document.getElementById('reset-btn');
