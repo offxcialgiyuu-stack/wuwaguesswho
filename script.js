@@ -13,8 +13,17 @@ const counterDisplay = document.getElementById('counter');
 const modal = document.getElementById('custom-modal');
 const modeIndicator = document.getElementById('mode-indicator');
 
-let currentFolder = 'images'; // Standard-Ordner
+let currentFolder = 'images'; 
 const totalCount = characters.length;
+
+// NEU: Funktion zum Vorladen der alternativen Bilder
+function preloadImages2() {
+    characters.forEach(name => {
+        const img = new Image();
+        img.src = `images2/Wuwa/${name.toLowerCase()}.jpg`;
+    });
+    console.log("Alternative Bilder werden im Hintergrund geladen...");
+}
 
 function updateCounter() {
     const eliminatedCount = document.querySelectorAll('.is-eliminated').length;
@@ -55,7 +64,6 @@ function renderBoard() {
             setTimeout(hideSecret, 1500);
         };
 
-        // Hier wurde loading="lazy" hinzugefügt
         card.innerHTML = `<img src="${imagePath}" alt="${name}" loading="lazy"><div class="name-tag">${name}</div>`;
         board.appendChild(card);
     });
@@ -74,6 +82,9 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
+// Zuerst die Bilder für später vorladen...
+preloadImages2();
+// ...dann das normale Board laden
 renderBoard();
 
 const resetBtn = document.getElementById('reset-btn');
