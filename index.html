@@ -1,35 +1,41 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wuwa Guess Who</title>
-    <!-- Dein Icon-Link mit dem Namen icon.png -->
+    <title>WuWa Guess Who</title>
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- Anleitung-Button und Modal -->
-    <button id="info-btn">How to Play</button>
-
-    <div id="instructions-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>How to Play</h2>
-            <p>1. <strong>Goal:</strong> Guess the other´s Secret Character by Asking them Questions about the Character!</p>
-            <p>2. <strong>Eliminate:</strong> Left-click on a card to flip it down if the character doesn't match your opponent's description.</p>
-            <p>3. <strong>Secret Card:</strong> Right-click on any card to set your own secret character at the start of the round.</p>
-            <p>4. <strong>Win:</strong> The Player who guessed the other´s Secret Card Wins! (if you guess and you are wrong its an instant loose!)</p>
-        </div>
+    <!-- Floating counter in the top left -->
+    <div class="floating-counter">
+        REMAINING: <span id="counter">49</span>/49
     </div>
 
-    <div id="counter">Remaining: <span id="count">0</span></div>
+    <h1>WuWa Guess Who</h1>
     
-    <div id="board"></div>
+    <div class="player-area">
+        <div id="secret-slot" class="hidden-char empty-slot">
+            <!-- Text comes from CSS via :after -->
+        </div>
+        <button id="reset-btn">Restart Game</button>
+    </div>
 
-    <div id="secret-slot" class="empty-slot">
-        <p>Right-click a card to set secret</p>
+    <div id="board" class="game-board">
+        <!-- JavaScript fills this section -->
+    </div>
+
+    <!-- The stylish Reset Modal -->
+    <div id="custom-modal" class="modal">
+        <div class="modal-content">
+            <h2>Restart Game?</h2>
+            <p>Your board will be completely reset.</p>
+            <div class="modal-buttons">
+                <button id="confirm-reset" class="btn-confirm">YES, RESET</button>
+                <button id="cancel-reset" class="btn-cancel">CANCEL</button>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
