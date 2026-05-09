@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Floating counter in the top left -->
     <div class="floating-counter">
         REMAINING: <span id="counter">49</span>/49
     </div>
@@ -16,17 +15,13 @@
     <h1>WuWa Guess Who</h1>
     
     <div class="player-area">
-        <div id="secret-slot" class="hidden-char empty-slot">
-            <!-- Text comes from CSS via :after -->
-        </div>
+        <div id="secret-slot" class="hidden-char empty-slot"></div>
         <button id="reset-btn">Restart Game</button>
+        <div id="mode-indicator" style="font-size: 10px; color: #888; margin-top: 5px;">Mode: Default (images)</div>
     </div>
 
-    <div id="board" class="game-board">
-        <!-- JavaScript fills this section -->
-    </div>
+    <div id="board" class="game-board"></div>
 
-    <!-- The stylish Reset Modal -->
     <div id="custom-modal" class="modal">
         <div class="modal-content">
             <h2>Restart Game?</h2>
