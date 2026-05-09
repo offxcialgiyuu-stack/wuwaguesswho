@@ -34,7 +34,7 @@ characters.forEach(name => {
     card.className = 'character-card';
     
     // Convert name to lowercase for the file path (e.g., Augusta -> augusta.jpg)
-    const imagePath = `images/Wuwa/${name.toLowerCase()}.jpg`;
+    const imagePath = `images/Wuwa/${name.toLowerCase()}.webp`;
     
     card.onclick = () => {
         card.classList.toggle('is-eliminated');
